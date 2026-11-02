@@ -1,0 +1,23 @@
+{
+  "name": "tradebreak-desktop",
+  "productName": "TradeBreak",
+  "version": "0.1.0",
+  "description": "TradeBreak desktop app for Windows and macOS",
+  "author": "TradeBreak",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "icon": "node scripts/make-icon.mjs",
+    "dist": "electron-builder --publish never"
+  },
+  "dependencies": {
+    "electron-updater": "6.8.10"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "2.6.2",
+    "electron": "44.9.0",
+    "electron-builder": "26.17.0"
+  }
+}

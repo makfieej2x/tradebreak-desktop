@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'" />
+    <title>TradeBreak</title>
+    <style>
+      :root { color-scheme: dark; }
+      body {
+        margin: 0; height: 100vh; display: grid; place-items: center;
+        background: #0b0e14; color: #e6e9ef;
+        font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+      main { text-align: center; max-width: 420px; padding: 24px; }
+      h1 { font-size: 20px; font-weight: 600; margin: 0 0 8px; }
+      p { color: #9aa3b2; margin: 0 0 24px; }
+      button {
+        background: #0051ff; color: #fff; border: 0; border-radius: 8px;
+        padding: 10px 20px; font: inherit; font-weight: 600; cursor: pointer;
+      }
+      button:hover { background: #1a63ff; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Can't reach TradeBreak</h1>
+      <p>Check your internet connection. No prices or account data are shown while offline.</p>
+      <button id="retry" type="button">Try again</button>
+    </main>
+    <script>
+      const target = new URLSearchParams(location.search).get("retry") || "https://web.tradebreak.com/";
+      const safe = /^https:\/\/(web|dash)\.tradebreak\.com\//.test(target) ? target : "https://web.tradebreak.com/";
+      document.getElementById("retry").addEventListener("click", () => { location.href = safe; });
+      window.addEventListener("online", () => { location.href = safe; });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+appId: com.tradebreak.terminal
+productName: TradeBreak
+copyright: Copyright © TradeBreak
+artifactName: TradeBreak-${version}-${os}-${arch}.${ext}
+directories:
+  output: dist
+  buildResources: build
+files:
+  - src/**
+  - package.json
+protocols:
+  - name: TradeBreak
+    schemes: [tradebreak]
+mac:
+  category: public.app-category.finance
+  target:
+    - target: dmg
+      arch: [universal]
+    - target: zip
+      arch: [universal]
+  # Ad-hoc signature until an Apple Developer ID is added (see README).
+  identity: "-"
+  hardenedRuntime: false
+  icon: build/icon.png
+win:
+  target:
+    - target: nsis
+      arch: [x64, arm64]
+  icon: build/icon.png
+nsis:
+  oneClick: true
+  perMachine: false
+  deleteAppDataOnUninstall: false
+publish:
+  provider: github
+  owner: makfieej2x
+  repo: tradebreak-desktop
+  releaseType: draft
