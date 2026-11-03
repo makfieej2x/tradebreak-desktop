@@ -15,6 +15,7 @@ The app is not code-signed yet, so your computer will warn you once:
   scroll down and click **Open Anyway**.
 
 - **Linux (Ubuntu, Mint, Debian):** `sudo apt install ./TradeBreak-<version>-linux-amd64.deb`, then open TradeBreak from the app menu.
+  No admin rights? Download the `.tar.gz`, extract it, and run `tradebreak` inside the folder.
 
 ## What the app does and doesn't do
 
