@@ -27,6 +27,15 @@ win:
     - target: nsis
       arch: [x64, arm64]
   icon: build/icon.png
+linux:
+  target:
+    - target: deb
+      arch: [x64]
+  executableName: tradebreak
+  category: Finance
+  maintainer: TradeBreak
+  icon: build/icon.png
+  synopsis: TradeBreak trading terminal
 nsis:
   oneClick: true
   perMachine: false

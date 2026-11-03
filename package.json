@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "description": "TradeBreak desktop app for Windows and macOS",
   "author": "TradeBreak",
+  "homepage": "https://tradebreak.com",
   "license": "UNLICENSED",
   "private": true,
   "main": "src/main.js",

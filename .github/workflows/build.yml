@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, windows-latest]
+        os: [macos-latest, windows-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -36,6 +36,23 @@ jobs:
           else
             npx electron-builder --publish never
           fi
+      - name: Launch test (opens the packaged app against web.tradebreak.com)
+        shell: bash
+        timeout-minutes: 5
+        run: |
+          case "$RUNNER_OS" in
+            Windows) APP=(dist/win-unpacked/TradeBreak.exe) ;;
+            macOS)   APP=(dist/mac-universal/TradeBreak.app/Contents/MacOS/TradeBreak) ;;
+            Linux)
+              sudo apt-get install -y -qq xvfb >/dev/null
+              # Ubuntu 24.04 runners block the user namespaces Chromium's sandbox needs.
+              # Re-enable them on this throwaway runner instead of turning the app sandbox off.
+              sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+              APP=(xvfb-run -a dist/linux-unpacked/tradebreak) ;;
+          esac
+          TRADEBREAK_SMOKE_OUT="$PWD/smoke.json" "${APP[@]}" || true
+          cat smoke.json
+          node -e "process.exit(require('./smoke.json').ok ? 0 : 1)"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: installers-${{ matrix.os }}
@@ -43,6 +60,7 @@ jobs:
             dist/*.dmg
             dist/*.zip
             dist/*.exe
+            dist/*.deb
             dist/*.yml
           if-no-files-found: error
           retention-days: 14

@@ -14,6 +14,8 @@ The app is not code-signed yet, so your computer will warn you once:
 - **macOS:** open the app once. When macOS blocks it, go to **System Settings → Privacy & Security**,
   scroll down and click **Open Anyway**.
 
+- **Linux (Ubuntu, Mint, Debian):** `sudo apt install ./TradeBreak-<version>-linux-amd64.deb`, then open TradeBreak from the app menu.
+
 ## What the app does and doesn't do
 
 - Opens only `web.tradebreak.com` and `dash.tradebreak.com`; every other link opens in your browser.

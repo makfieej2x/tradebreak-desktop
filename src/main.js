@@ -183,7 +183,51 @@ function createWindow() {
 
   win.loadURL(pendingDeepLink || START_URL);
   pendingDeepLink = null;
+  if (process.env.TRADEBREAK_SMOKE_OUT) runSmokeTest(win, process.env.TRADEBREAK_SMOKE_OUT);
   return win;
+}
+
+// ---- CI launch test --------------------------------------------------------
+// Used only by the build workflow: launches the packaged app, checks the
+// terminal loaded inside the locked-down window, writes a JSON report, quits.
+
+function runSmokeTest(win, outFile) {
+  const finish = (report) => {
+    try {
+      fs.writeFileSync(outFile, JSON.stringify(report, null, 2));
+    } finally {
+      app.exit(report.ok ? 0 : 1);
+    }
+  };
+  const timer = setTimeout(() => finish({ ok: false, error: "timed out after 90 s", url: win.webContents.getURL() }), 90_000);
+  win.webContents.once("did-finish-load", async () => {
+    clearTimeout(timer);
+    try {
+      const page = await win.webContents.executeJavaScript(
+        `({ title: document.title, desktop: window.tradebreakDesktop?.isDesktop === true,
+            nodeHidden: typeof require === "undefined" && typeof process === "undefined",
+            userAgent: navigator.userAgent })`,
+      );
+      const url = win.webContents.getURL();
+      const prefs = win.webContents.getLastWebPreferences();
+      const report = {
+        url,
+        ...page,
+        sandbox: prefs.sandbox === true,
+        contextIsolation: prefs.contextIsolation === true,
+        nodeIntegration: prefs.nodeIntegration === true,
+        blocksOtherSites: !isAllowed("https://example.com/") && isAllowed(START_URL),
+        electron: process.versions.electron,
+        platform: `${process.platform}-${process.arch}`,
+      };
+      report.ok =
+        isAllowed(url) && report.desktop && report.nodeHidden && report.sandbox &&
+        report.contextIsolation && !report.nodeIntegration && report.blocksOtherSites;
+      finish(report);
+    } catch (error) {
+      finish({ ok: false, error: String(error) });
+    }
+  });
 }
 
 function buildMenu() {
