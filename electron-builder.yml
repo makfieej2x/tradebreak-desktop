@@ -1,7 +1,7 @@
 appId: com.tradebreak.terminal
 productName: TradeBreak
 copyright: Copyright © TradeBreak
-artifactName: TradeBreak-${version}-${os}-${arch}.${ext}
+artifactName: TradeBreak-${os}-${arch}.${ext}
 directories:
   output: dist
   buildResources: build
